@@ -168,8 +168,6 @@ abstract class MetaModelCollection extends Model implements \Countable, \Iterato
 
     public function connectApi($api)
     {
-        $this->connectApi($api);
-
         $items = $this->getCollection();
         foreach ($items as $item) {
             $item->connectApi($api);
