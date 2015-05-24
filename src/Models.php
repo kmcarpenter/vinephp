@@ -90,7 +90,7 @@ abstract class Model {
             'conversation' => 'conversationId',
             'message' => 'message'
         ];
-        $nameAttr = $names[$className];
+        $nameAttr = isset($names[$className]) ? $names[$className] : 'unknown';
         $this->data->name = isset($this->data->$nameAttr) ? $this->data->$nameAttr : '<Unknown>';
     }
 
