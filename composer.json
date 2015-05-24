@@ -1,0 +1,20 @@
+{
+    "name": "mcarpenter/vinephp",
+    "description": "A Vine API for PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Carpenter",
+            "email": "michael.carpenter@zenwerx.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/API.php",
+            "src/Endpoint.php",
+            "src/Models.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
