@@ -15,6 +15,10 @@ require_once("../src/Models.php");
 
 use mcarpenter\vinephp\API;
 use mcarpenter\vinephp\VineException;
+use mcarpenter\vinephp\Post;
+use mcarpenter\vinephp\PostCollection;
+use mcarpenter\vinephp\UserCollection;
+use mcarpenter\vinephp\User;
 
 try {
     $api = new API();
@@ -33,6 +37,16 @@ try {
      * @var mcarpenter\vinephp\PostCollection $timeline
      */
     $timeline = $user->timeline();
+
+    /**
+     * @var Post $post
+     */
+    foreach($timeline as $post) {
+        $fetchedPost = Post::getPostById($post->id);
+
+        var_dump($fetchedPost);
+    }
+
 } catch (VineException $e) {
     echo $e->getMessage();
 }
