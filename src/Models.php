@@ -166,8 +166,7 @@ abstract class MetaModelCollection extends Model implements \Countable, \Iterato
         return $likeCollection;
     }
 
-    public function connectApi($api)
-    {
+    public function connectApi($api) {
         $items = $this->getCollection();
         foreach ($items as $item) {
             $item->connectApi($api);
@@ -227,108 +226,97 @@ class User extends Model {
         }
     }
 
-    public function follow($user = null, $args = array()) {
+    private function setUserId($user, &$args) {
         if (!$user) {
             $user = $this;
         }
         $args['user_id'] = $user->id;
+    }
+
+    public function follow($user = null, $args = array()) {
+        $this->setUserId($user, $args);
         $this->api->follow($args);
         return $this;
     }
 
     public function unfollow($user, $args = array()) {
-        if (!$user) {
-            $user = $this;
-        }
-        $args['user_id'] = $user->id;
+        $this->setUserId($user, $args);
         $this->api->unfollow($args);
         return $this;
     }
 
     public function followNotifications($user, $args = array()) {
-        if (!$user) {
-            $user = $this;
-        }
-        $args['user_id'] = $user->id;
+        $this->setUserId($user, $args);
         $this->api->follow_notifications($args);
         return $this;
     }
 
     public function unfollowNotifications($user, $args = array()) {
-        if (!$user) {
-            $user = $this;
-        }
-        $args['user_id'] = $user->id;
+        $this->setUserId($user, $args);
         $this->api->unfollow_notifications($args);
         return $this;
     }
 
     public function block($user, $args = array()) {
-        if (!$user) {
-            $user = $this;
-        }
-        $args['user_id'] = $user->id;
+        $this->setUserId($user, $args);
         $this->api->block($args);
         return $this;
     }
 
     public function unblock($user, $args = array()) {
-        if (!$user) {
-            $user = $this;
-        }
-        $args['user_id'] = $user->id;
+        $this->setUserId($user, $args);
         $this->api->block($args);
         return $this;
     }
 
     public function followers($args = array()) {
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_followers($args);
     }
 
     public function following($args = array()) {
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_following($args);
     }
 
     public function timeline($args = array()) {
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_user_timeline($args);
     }
 
     public function likes($args = array()) {
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_user_likes($args);
     }
 
     public function pendingNotificationsCount($args = array()) {
         $this->ensureOwnership();
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_pending_notifications_count($args);
     }
 
     public function getNotifications($args = array()) {
         $this->ensureOwnership();
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->get_notifications($args);
     }
 
     public function update($args = array()) {
         $this->ensureOwnership();
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         $this->api->update_profile($args);
         return $this;
     }
 
     public function unsetExplicit($args = array()) {
         $this->ensureOwnership();
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         $this->api->unset_explicit($args);
     }
 
     public function setExplicit($args = array()) {
         $this->ensureOwnership();
-        $args['user_id'] = $this->id;
+        $this->setUserId(null, $args);
         return $this->api->set_explicit($args);
     }
 }
@@ -347,19 +335,27 @@ class Post extends Model {
         return $api->get_post(array("post_id" => $id));
     }
 
+    private function setPostId($post, &$args) {
+        if (!$post) {
+            $post = $this;
+        }
+        $args['post_id'] = $post->id;
+    }
+
     function like( $args = array() ) {
+        $this->setPostId(null, $args);
         $post = $this->api->like($args);
         $post->post = $this;
         return $post;
     }
 
     function unlike( $args = array() ) {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         return $this->api->unlike($args);
     }
 
     function revine( $args = array() ) {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         $post = $this->api->revine($args);
         $post->post = $this;
         return $post;
@@ -398,27 +394,26 @@ class Post extends Model {
     }
 
     function report( $args = array() )  {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         $this->api->report($args);
         return $this;
     }
 
     function likes( $args = array() ) {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         return $this->api->get_post_likes($args);
     }
 
     function comments( $args = array() ) {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         return $this->api->get_post_comments($args);
     }
 
     function reposts( $args = array() ) {
-        $args['post_id'] = $this->id;
+        $this->setPostId(null, $args);
         return $this->api->get_post_reposts($args);
     }
 }
-
 
 class Comment extends Model {
     function delete( $args = array() ) {
@@ -470,40 +465,31 @@ class Channel extends Model {
         $args['channel_id'] = $this->id;
         return $this->api->get_channel_popular_timeline($args);
     }
-
-
 }
 
 class Notification extends Model {
 }
 
-
 // mention, tag or post in a notification, comment or title
 class Entity extends Model {
 }
 
-
 class Venue extends Model {
 }
-
 
 class Conversation extends Model {
 }
 
-
 class Message extends Model {
 }
-
 
 class PureUserCollection extends ModelCollection {
     public static $model = User::class;
 }
 
-
 class UserCollection extends MetaModelCollection {
     protected static $collectionClass = PureUserCollection::class;
 }
-
 
 class PurePostCollection extends ModelCollection {
     protected static $model = Post::class;
@@ -514,16 +500,13 @@ class PostCollection extends MetaModelCollection {
     protected static $collectionClass = PurePostCollection::class;
 }
 
-
 class PureCommentCollection extends ModelCollection {
     protected static $model = Comment::class;
 }
 
-
 class CommentCollection extends MetaModelCollection {
     protected static $collectionClass = PureCommentCollection::class;
 }
-
 
 class PureLikeCollection extends ModelCollection {
     protected static $model = Like::class;
@@ -533,16 +516,13 @@ class LikeCollection extends MetaModelCollection {
     protected static $collectionClass = PureLikeCollection::class;
 }
 
-
 class PureRepostCollection extends ModelCollection {
     protected static $model = Repost::class;
 }
 
-
 class RepostCollection extends MetaModelCollection {
     protected static $collectionClass = PureRepostCollection::class;
 }
-
 
 class PureTagCollection extends ModelCollection {
     protected static $model = Tag::class;
@@ -552,11 +532,9 @@ class TagCollection extends MetaModelCollection {
     protected static $collectionClass = PureTagCollection::class;
 }
 
-
 class PureChannelCollection extends ModelCollection {
     protected static $model = Channel::class;
 }
-
 
 class ChannelCollection extends MetaModelCollection {
     protected static $collectionClass = PureChannelCollection::class;
@@ -567,31 +545,25 @@ class PureNotificationCollection extends ModelCollection {
     protected static $model = Notification::class;
 }
 
-
 class NotificationCollection extends MetaModelCollection {
     protected static $collectionClass = PureNotificationCollection::class;
 }
-
 
 class PureEntityCollection extends ModelCollection {
     protected static $model = Entity::class;
 }
 
-
 class PureConversationCollection extends ModelCollection {
     protected static $model = Conversation::class;
 }
-
 
 class ConversationCollection extends MetaModelCollection {
     protected static $collectionClass = PureConversationCollection::class;
 }
 
-
 class PureMessageCollection extends ModelCollection {
     protected static $model = Message::class;
 }
-
 
 class MessageCollection extends MetaModelCollection {
     protected static $collectionClass = PureMessageCollection::class;
