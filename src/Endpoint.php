@@ -22,7 +22,8 @@ class Endpoint
                         'X-Vine-Client: ios/2.5.1',
                         'Accept-Language: en;q=1',
                         'Connection: keep-alive',
-                        'User-Agent: iphone/172 (iPad; iOS 7.0.4; Scale/2.00)'
+                        'User-Agent: iphone/172 (iPad; iOS 7.0.4; Scale/2.00)',
+                        'Expect:' // Disable cURL's 100 continue
                     ];
 
     /** @const */

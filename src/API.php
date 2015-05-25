@@ -209,8 +209,8 @@ class API {
             CURLOPT_URL => $builtUrl,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_HEADER => 1
-//            ,CURLOPT_VERBOSE => 1
+            CURLOPT_HEADER => 1,
+            CURLOPT_ENCODING  => "gzip"
         );
 
         switch ($type) {
@@ -241,11 +241,6 @@ class API {
 
         $headerEndPosition = strpos($httpResponse, "\r\n\r\n");
         $headerText = trim(substr($httpResponse, 0, $headerEndPosition));
-        if (strpos($headerText, "100 Continue") !== false) {
-            $httpResponse = trim(substr($httpResponse, $headerEndPosition));
-            $headerEndPosition = strpos($httpResponse, "\r\n\r\n");
-            $headerText = trim(substr($httpResponse, 0, $headerEndPosition));
-        }
 
         $bodyText = trim(substr($httpResponse, $headerEndPosition));
         $statusCode = 0;
