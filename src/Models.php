@@ -206,6 +206,19 @@ abstract class MetaModelCollection extends Model implements \Countable, \Iterato
 }
 
 class User extends Model {
+
+    /**
+     * @param int $id
+     * @param API $api
+     * @return User
+     */
+    public static function getUserById($id, $api = null) {
+        if (!$api) {
+            $api = new API();
+        }
+        return $api->get_user($id);
+    }
+
     public function connectApi($api) {
         parent::connectApi($api);
 
@@ -321,6 +334,19 @@ class User extends Model {
 }
 
 class Post extends Model {
+
+    /**
+     * @param int $id
+     * @param API $api
+     * @return Post
+     */
+    public static function getPostById($id, $api = null) {
+        if (!$api) {
+            $api = new API();
+        }
+        return $api->get_post(array("post_id" => $id));
+    }
+
     function like( $args = array() ) {
         $post = $this->api->like($args);
         $post->post = $this;
