@@ -281,7 +281,7 @@ class User extends Model {
         if (!$api) {
             $api = new API();
         }
-        return $api->get_user($id);
+        return $api->get_user(array("user_id" => $id));
     }
 
     public function connectApi($api) {

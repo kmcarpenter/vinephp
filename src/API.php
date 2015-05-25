@@ -202,6 +202,7 @@ class API {
         if ($params && count($params)) {
             foreach ($params as $key => $value) {
                 $builtUrl .= ($first ? "?" : "&") . urlencode($key) . "=" . urlencode($value);
+                $first = false;
             }
         }
 
